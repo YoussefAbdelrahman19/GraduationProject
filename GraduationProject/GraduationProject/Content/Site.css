@@ -1,0 +1,97 @@
+﻿* {
+    direction: rtl;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+/*The nav bar*/
+div .baseNavBar {
+    background: #624097;
+    border-radius: 2px 4px;
+    font-size: x-large;
+    font-weight: 600;
+    padding: 17px;
+    padding-bottom: 20px;
+   /* for the next content under the nav bar*/
+}
+
+    div .baseNavBar ul {
+        /*//padding-right:100px;*/
+    }
+    /* لينك الصيدليات والطبيب والرئيسية*/
+    div .baseNavBar div ul li .link1 {
+        color: #ffffff;
+        margin: 5px;
+    }
+    /*الرئيسية*/
+    div .baseNavBar div ul li .third {
+        color: #ffffff;
+        margin: 5px;
+        /*margin-right:-40px;*/
+    }
+    /* لينك الصيدليات والطبيب والرئيسية*/
+    div .baseNavBar div ul li .link1:hover {
+        color: azure;
+        border-bottom:2px solid gray;
+    }
+
+
+
+/* الاشتراك */
+#registerLink {
+    color: #ffffff;
+}
+
+/*تسجيل الدخول*/
+#loginLink {
+    color: #ffffff;
+}
+/*   الاشتراك وتسجيل الدخول*/
+
+
+/* the logo of the site*/
+div .baseNavBar div ul li img.logo {
+    position: absolute;
+    margin-bottom: -20px;
+    margin-top: -10px;
+    left: 80%;
+}
+
+@media only screen and (max-width: 765px) {
+    div .baseNavBar div ul li img.logo {
+        display: none;
+    }
+}
+
+/*صفحه التبرع بالعلاج*/
+
+#headerOfDonatingMedicine
+{
+   margin-top:70px;
+}
+.fi{
+    font-family:swissra,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-size: 18px;
+}

@@ -1,0 +1,311 @@
+﻿@model GraduationProject.Models.Member
+
+@{
+    ViewBag.Title = "Add Member";
+}
+
+<br />
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    <br />
+                
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label " for="FullName">Full Name </label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="FullName" name="FullName" type="text">
+                            @Html.ValidationMessageFor(model => model.FullName)
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.PhoneNo, new { @class = "control-label" })
+                        </div>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="Phone" name="Phone" type="text">
+                            @Html.ValidationMessageFor(model => model.PhoneNo )
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            @Html.LabelFor(model => model.Email, new { @class = "control-label" })
+                        </div>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="Email" name="Email" type="text">
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label " for="Address">National Id  </label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="NationalId" name="NationalId" type="number" min ="14" max="100">
+                            @Html.ValidationMessageFor(model => model.NationalId)
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label " for="Address">Address  </label>
+                        </div>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="Address" name="Address" type="text">
+                            @Html.ValidationMessageFor(model => model.Address)
+                        </div>
+                    </div>
+
+
+                    
+                    <br />
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label " for="Address">Department  </label>
+                        </div>
+                        <div class="col-sm-10">
+                            <select id="ddl_department" onchange="loadJob()"class="form-control"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2">
+                            <label class="control-label " for="Address">Job  </label>
+                        </div>
+                        <div class="col-sm-10">
+                            <select id="ddl_job" class="form-control"></select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class=" col-sm-4">
+                        </div>
+                        <div class=" col-sm-4">
+                            <input type="button" onclick="AddMember();" value="Add Member" class="btn btn-primary" />
+                        </div>
+                        <div class=" col-sm-4">
+                        </div>
+                    </div>
+                </div>
+
+
+        </div>
+        <div class="col-sm-2"></div>
+    </div>
+</div>
+
+
+
+<div id="GetAllMembersDiv" class="table-responsive">
+
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+
+    $(document).ready(function () {
+        LoadDepartment();
+        loadJob();
+        GetAllMembers();
+    });
+    function LoadDepartment() {
+        $('#ddl_department option').each(function () {
+            $(this).remove();
+        });
+        var url = "@Url.Action("GetAllGovernrates","Member")";
+        var type = "GET";
+        var result = CreateAjaxRequest(url, type, {});
+        $("#ddl_department").append('<option > --Please Select--</option>');
+
+        for (var i in result) {
+            $("#ddl_department").append('<option value=' + result[i].ID + '>' + result[i].GovernarteName + '</option>');
+        }
+
+
+    }
+    function loadJob() {
+        var dept_id = $("#ddl_department").val();
+        $('#ddl_job option').each(function () {
+            $(this).remove();
+        });
+        var url = "@Url.Action("GetGovCities", "Member")";
+        var type = "POST";
+        var result = CreateAjaxRequest(url, type, { governmentid: dept_id });
+        $("#ddl_job").append('<option > --Please Select--</option>');
+        for (var i in result) {
+            $("#ddl_job").append('<option value=' + result[i].ID + '>' + result[i].CityName + '</option>');
+        }
+
+    }
+
+   
+       function AddMember() {
+
+           var FullName = $("#FullName ").val();
+           var PhoneNo = $("#Phone").val();
+          var  Email = $("#Email").val();
+           var NationalId = $("#NationalId ").val();
+           var Address = $("#Address").val();
+           var CityID = $("#ddl_job").val();
+
+
+
+            if (FullName == "" ||
+                PhoneNo == "" ||
+                Email == "" ||
+                Address == "" ||
+                CityID == "")
+            alert("Please enter all required data");
+        else {
+                debugger;
+                var type = "POST";
+                var url = "@Url.Action("SaveMember","Member")";
+                var result = CreateAjaxRequest(url, type,
+                    {
+                        name: FullName,
+                        phone: PhoneNo,
+                        nationalid: NationalId,
+                        Email: Email,
+                    address: Address,
+                    IDNumber: NationalId,
+                    jid: CityID
+
+                });
+            alert(result);
+            ClearAllFormData();
+            GetAllMembers();
+
+        }
+
+
+    }
+        function GetAllMembers() {
+            var type = "GET";
+            var url = "@Url.Action("LoadAllMembers","Member")";
+
+        $("#GetAllMembersDiv").html('');
+            var result = CreateAjaxRequest(url, type, {});
+
+        if (result != null) {
+            if (result.length > 0) {
+                var tr = '';
+                tr += '<table class="table table-striped table-bordered table-hover dataTables-example">';
+                tr += '<thead>';
+                tr += '   <tr>';
+                tr += '       <th>Full Name</th>';
+                tr += '       <th> Phone Number</th>';
+                tr += '       <th>Email</th>';
+                tr += '       <th>Address </th>';
+                tr += '       <th>National Id </th>';
+                tr += '       <th>Department </th>';
+                tr += '       <th>Job </th>';
+
+                tr += '         <th>Edit</th>';
+                tr += '            <th>Delete</th>';
+                tr += '    </tr>';
+                tr += '</tr></thead>';
+                tr += '<tbody>';
+
+
+                for (var i = 0; i < result.length; i++) {
+                    tr += '<tr>';
+                    tr += '<td>' + result[i].FullName + '</td>';
+                    tr += '<td>' + result[i].PhoneNo + '</td>';
+                    tr += '<td>' + result[i].Email + '</td>';
+                    tr += '<td>' + result[i].Address + '</td>';
+                    tr += '<td>' + result[i].NationalId + '</td>';
+                    tr += '<td>' + result[i].GovernarteName + '</td>';
+                    tr += '<td>' + result[i].CityName + '</td>';
+                    tr += '<td><a href="#" onclick="EditThisMember(' + result[i].ID + ');return false;"><i class="glyphicon glyphicon-edit" style="color:blue;font-weight:bold"></i></a></td>';
+                    tr +='<td><a href="#" onclick="DeleteThisMember(' + result[i].ID + ');return false;"><i class="glyphicon glyphicon-trash" style="color:red;font-weight:bold;"></i></a></td>' ;
+                    tr +=  '</tr>';
+                }
+
+                tr += '</tbody>';
+                tr += '  </table>';
+                $("#GetAllMembersDiv").append(tr);
+                $('.dataTables-example').DataTable({
+                    "ordering":false
+                });
+            }
+        }
+    }
+
+        function EditThisMember(mid) {
+            $(window).scrollTop(0);
+            var type = "POST";
+            var url = "@Url.Action("LoadMemberForEdit","Member")";
+
+            var result = CreateAjaxRequest(url, type, { memberid: mid });
+            for (var i = 0; i < result.length; i++) {
+                $("#FullName ").val(result[i].FullName);
+                $("#Phone").val(result[i].PhoneNo);
+                $("#Email").val(result[i].Email);
+                $("#NationalId ").val(result[i].NationalId );
+                $("#Address").val(result[i].Address);
+                 LoadDepartment();
+                 $("#ddl_department").val(result[i].governmentid);
+                loadJob();
+                $("#ddl_job").val(result[i].CityID);
+            }
+
+    }
+
+        function DeleteThisMember(mid) {
+        var x = confirm("Are you sure you want to delete this ?");
+        if (x == true) {
+
+            var type = "POST";
+            var url = "@Url.Action("DeleteMember", "Member")";
+
+            var result = CreateAjaxRequest(url, type, { memberid: mid });
+
+            alert(result);
+            GetAllMembers();
+        }
+    }
+
+    function ClearAllFormData() {
+
+
+         $("#FullName ").val(null);
+         $("#Phone").val(null);
+         $("#Email").val(null);
+         $("#NationalId ").val(null);
+         $("#Address").val(null);
+         $("#ddl_department").val(null);
+         $("#ddl_job").val(null);
+
+
+    }
+
+
+
+
+        function CreateAjaxRequest(url, requesttype, form_data) {
+            var resultData = null;
+            $.ajax({
+                url: url,
+                type: requesttype,
+                async: false,
+                datatype: 'JSON',
+                contentType: "application/json",
+                data: JSON.stringify(form_data),
+                success: function (result) { resultData = result }
+            });
+            return resultData;
+        }
+
+
+    </script>
+}
